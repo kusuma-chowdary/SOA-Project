@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workingSetManager>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1793271044459_0" label="Java Main Sources" name="Java Main Sources"/>
+<workingSet editPageId="org.eclipse.jdt.internal.ui.DynamicSourcesWorkingSet" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1793271044482_1" label="Java Test Sources" name="Java Test Sources"/>
+<workingSet editPageId="org.eclipse.ui.resourceWorkingSetPage" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1793271094087_3" label="archivalia-library" name="archivalia-library">
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/common" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/discovery-server" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/auth-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/book-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/fine-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/borrow-service" type="4"/>
+<item factoryID="org.eclipse.ui.internal.model.ResourceFactory" path="/api-gateway" type="4"/>
+</workingSet>
+<workingSet aggregate="true" factoryID="org.eclipse.ui.internal.WorkingSetFactory" id="1793271046327_2" label="Window Working Set" name="Aggregate for window 1793271046327"/>
+</workingSetManager>

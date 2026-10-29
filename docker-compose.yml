@@ -1,0 +1,101 @@
+x-service-environment: &service-environment
+  POSTGRES_HOST: ${POSTGRES_HOST_DOCKER:-host.docker.internal}
+  POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+  POSTGRES_DB: ${POSTGRES_DB:-archivalia}
+  POSTGRES_USER: ${POSTGRES_USER:-archivalia_user}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in the environment before starting the services}
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+  EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+  JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in the environment before starting the services}
+
+services:
+  discovery-server:
+    build:
+      context: .
+      args:
+        APP_MODULE: discovery-server
+    environment:
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+    ports:
+      - "8761:8761"
+    restart: unless-stopped
+
+  auth-service:
+    build:
+      context: .
+      args:
+        APP_MODULE: auth-service
+    environment:
+      <<: *service-environment
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@archivalia.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in the environment before starting the services}
+    depends_on:
+      discovery-server:
+        condition: service_started
+    restart: unless-stopped
+
+  book-service:
+    build:
+      context: .
+      args:
+        APP_MODULE: book-service
+    environment:
+      <<: *service-environment
+    depends_on:
+      discovery-server:
+        condition: service_started
+    restart: unless-stopped
+
+  fine-service:
+    build:
+      context: .
+      args:
+        APP_MODULE: fine-service
+    environment:
+      <<: *service-environment
+      FINE_PER_DAY: ${FINE_PER_DAY:-1.00}
+    depends_on:
+      discovery-server:
+        condition: service_started
+    restart: unless-stopped
+
+  borrow-service:
+    build:
+      context: .
+      args:
+        APP_MODULE: borrow-service
+    environment:
+      <<: *service-environment
+      LOAN_PERIOD_DAYS: ${LOAN_PERIOD_DAYS:-14}
+    depends_on:
+      discovery-server:
+        condition: service_started
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: .
+      args:
+        APP_MODULE: api-gateway
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
+      EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in the environment before starting the services}
+      FRONTEND_ORIGIN: http://localhost:5173
+    ports:
+      - "8080:8080"
+    depends_on:
+      discovery-server:
+        condition: service_started
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
+    restart: unless-stopped
